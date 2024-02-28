@@ -12,7 +12,11 @@ class AlunoController extends Controller
      */
     public function index()
     {
-        return view("create.list");
+        $dados = aluno::all();
+
+       // dd($dados); //debug
+
+        return view("aluno.list", ["dados" => $dados]);
     }
 
     /**
@@ -20,10 +24,11 @@ class AlunoController extends Controller
      */
     public function create()
     {
+
         return view("aluno.form");
 
         }
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -68,6 +73,27 @@ class AlunoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $dado = Aluno::findOrfail($id);
+
+        $dado->delete();
+
+        return redirect('Aluno');
     }
+    public function search(Request $request)
+    {
+        if (!empty($request->nome)){
+            $dados = Aluno ::where(
+                "nome",
+                "like",
+                "%" . $request->nome. "%"
+            )->get();
+        } else {
+            $dados = Aluno::all();
+        }
+
+       // dd($dados); //debug
+
+        return view("aluno.list", ["dados" => $dados]);
+    }
+
 }
